@@ -1,16 +1,29 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
+
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
-
 import { useColorScheme } from '@/hooks/use-color-scheme';
-
+import { createTables } from '../database/tables';
+import { useEffect } from 'react';
+import { Platform } from 'react-native';
 export const unstable_settings = {
   anchor: '(tabs)',
 };
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+
+ useEffect(() => {
+  if (Platform.OS !== "web") {
+    const initDatabase = async () => {
+      await createTables();
+      console.log("Database initialized");
+    };
+
+    initDatabase();
+  }
+}, []);
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
