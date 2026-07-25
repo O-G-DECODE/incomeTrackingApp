@@ -1,5 +1,5 @@
 import { getDatabase } from "./db";
-
+import type { Product } from "@/types/product";
 export async function addProduct(
   productName: string,
   fullPrice: number,
@@ -25,4 +25,14 @@ export async function addProduct(
     quarterPrice,
     new Date().toISOString()
   );
+}
+
+export async function getAllProducts(): Promise<Product[]> {
+    const db = await getDatabase();
+
+    const products = await db.getAllAsync<Product>(
+        `SELECT * FROM Products`
+    );
+
+    return products;
 }
