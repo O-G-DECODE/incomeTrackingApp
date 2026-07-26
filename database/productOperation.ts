@@ -62,8 +62,8 @@ export async function updateProduct(
   halfPrice: number | null,
   quarterPrice : number | null
 ) {
-  const db = getDatabase();
-  (await db).runAsync(
+  const db = await getDatabase();
+  await db.runAsync(
     `
     UPDATE Products 
     SET
@@ -71,7 +71,7 @@ export async function updateProduct(
      fullPrice = ?,
      halfPrice = ?,
      quarterPrice = ?,
-     createdAt = ?,
+     createdAt = ?
      WHERE id = ?;
      `,
      productName,

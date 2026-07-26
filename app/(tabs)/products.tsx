@@ -1,4 +1,4 @@
-import { deleteProduct, getAllProducts } from "@/database/productOperation";
+import { deleteProduct, getAllProducts, updateProduct } from "@/database/productOperation";
 import { useState, useCallback } from "react";
 import {
     View,
@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import type { Product } from "@/types/product";
+import EditProductModel from "@/components/ui/editProductModel";
 
 export default function Products() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -40,6 +41,26 @@ export default function Products() {
             await loadProduct();
         } catch (error) {
             alert("Product not deleted")
+            console.log(error)
+        }
+    }
+
+    const handleUpdate = async ()=> {
+        if(!selectProduct) return;
+
+        try{
+            await updateProduct(
+                selectProduct.id,
+                editProductName,
+                Number(editFullPrice),
+                editHalfPrice.trim() == "" ? null : Number(editHalfPrice),
+                editQuarterPrice.trim() == "" ? null : Number(editQuarterPrice)
+            )
+            Alert.alert("Edit product success")
+            setModelVisibility(false)
+            await loadProduct()
+        }catch(error){
+            alert("Error occur")
             console.log(error)
         }
     }
@@ -98,47 +119,15 @@ export default function Products() {
                                 setModelVisibility(true)
                             }}
                         />
-                        <Modal
-                            visible={modalVisibility}
-                            animationType="slide"
-                            transparent={true}
-                        >
-                            <View>
-                                <Text> Edit Text</Text>
 
-                                <TextInput
-                                placeholder="Product Name"
-                                value={editProductName}
-                                onChangeText={setEditProductName}
-                                />
-                                <TextInput
-                                placeholder="Full Price"
-                                value={editFullPrice}
-                                onChangeText={setEditFullPrice}
-                                />
-                                <TextInput
-                                placeholder="Half price"
-                                value={editHalfPrice}
-                                onChangeText={setEditHalfPrice}
-                                />
-                                <TextInput
-                                placeholder="Quarter price"
-                                value={editQuarterPrice}
-                                onChangeText={setEditQuarterPrice}
-                                />
-
-                                <Button
-                                title="Cancel"
-                                onPress={() => setModelVisibility(false)}
-                                />
-
-                                <Button
-                                title="Update"  
-                                />
-                            </View>
-                        </Modal>
                     </View>
                 )}
+            />
+            <EditProductModel
+            visible={modalVisibility}
+            product={selectProduct}
+            onClose={()=> setModelVisibility(false)}
+            onUpdated={loadProduct}
             />
 
         </View>
