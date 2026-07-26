@@ -10,6 +10,7 @@ import {
 
 import type { Product } from "@/types/product";
 import { updateProduct } from "@/database/productOperation";
+import { showError } from "@/utils/alert";
 
 interface EditProductModalProps {
   visible: boolean;
@@ -24,6 +25,7 @@ export default function EditProductModal({
   onClose,
   onUpdated,
 }: EditProductModalProps) {
+    
   const [productName, setProductName] = useState("");
   const [fullPrice, setFullPrice] = useState("");
   const [halfPrice, setHalfPrice] = useState("");
@@ -61,7 +63,7 @@ export default function EditProductModal({
       onClose();
     } catch (error) {
       console.log(error);
-      Alert.alert("Error", "Failed to update product.");
+      showError(error)
     }
   };
 
