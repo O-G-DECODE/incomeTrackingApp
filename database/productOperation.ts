@@ -54,3 +54,32 @@ export async function deleteProduct(id: number) {
     `DELETE FROM Products WHERE id = ?;` , id
   );
 }
+
+export async function updateProduct(
+  id:number,
+  productName: string,
+  fullPrice:number,
+  halfPrice: number | null,
+  quarterPrice : number | null
+) {
+  const db = getDatabase();
+  (await db).runAsync(
+    `
+    UPDATE Products 
+    SET
+     productName = ?,
+     fullPrice = ?,
+     halfPrice = ?,
+     quarterPrice = ?,
+     createdAt = ?,
+     WHERE id = ?;
+     `,
+     productName,
+     fullPrice,
+     halfPrice,
+     quarterPrice,
+     new Date().toISOString(),
+     id
+  );
+  
+}
