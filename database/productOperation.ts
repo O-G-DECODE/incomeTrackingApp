@@ -1,3 +1,4 @@
+import Products from "@/app/(tabs)/products";
 import { getDatabase } from "./db";
 import type { Product } from "@/types/product";
 export async function addProduct(
@@ -26,13 +27,30 @@ export async function addProduct(
     new Date().toISOString()
   );
 }
-
 export async function getAllProducts(): Promise<Product[]> {
-    const db = await getDatabase();
+  const db = await getDatabase();
 
-    const products = await db.getAllAsync<Product>(
-        `SELECT * FROM Products`
-    );
+  console.log("Database opened");
 
-    return products;
+  const tables = await db.getAllAsync(
+    "SELECT name FROM sqlite_master WHERE type='table';"
+  );
+
+  console.log("Tables:", tables);
+
+  const products = await db.getAllAsync<Product>(
+    "SELECT * FROM Products"
+  );
+
+  console.log("Products:", products);
+
+  return products;
+}
+
+export async function deleteProduct(id: number) {
+  const db = getDatabase();
+
+  (await db).runAsync(
+    `DELETE FROM Products WHERE id = ?;` , id
+  );
 }
