@@ -12,6 +12,7 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import type { Product } from "@/types/product";
 import EditProductModel from "@/components/ui/editProductModel";
+import { showConfirm, showError } from "@/utils/alert";
 
 export default function Products() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -31,7 +32,7 @@ export default function Products() {
             setProducts(productList);
         } catch (error) {
             console.error(error);
-            Alert.alert("Error", "Something went wrong");
+            showError(error)
         }
     };
 
@@ -40,7 +41,7 @@ export default function Products() {
             await deleteProduct(id);
             await loadProduct();
         } catch (error) {
-            alert("Product not deleted")
+            showError(error)
             console.log(error)
         }
     }
@@ -60,7 +61,7 @@ export default function Products() {
             setModelVisibility(false)
             await loadProduct()
         }catch(error){
-            alert("Error occur")
+            showError(error)
             console.log(error)
         }
     }
@@ -99,18 +100,13 @@ export default function Products() {
                         </Text>
                         <Button
                             title="Delete"
-                            onPress={() => Alert.alert('Delete Product', "Are you sure to delete product",
-                                [
-                                    {
-                                        text: "Cancel",
-                                        style: "cancel"
-                                    },
-                                    {
-                                        text: "Delete",
-                                        onPress: () => handleDelete(item.id),
-                                    },
-                                ]
-                            )}
+                            onPress={() => {
+                                showConfirm(
+                                    "Delete Product",
+                                    "Are you sure want to delete product",
+                                    () => handleDelete
+                                )        
+                            }}
                         />
                         <Button
                             title="Edit"
