@@ -1,4 +1,4 @@
-import Products from "@/app/(tabs)/products";
+
 import { getDatabase } from "./db";
 import type { Product } from "@/types/product";
 export async function addProduct(
@@ -48,9 +48,9 @@ export async function getAllProducts(): Promise<Product[]> {
 }
 
 export async function deleteProduct(id: number) {
-  const db = getDatabase();
+  const db = await getDatabase();
 
-  (await db).runAsync(
+  await db.runAsync(
     `DELETE FROM Products WHERE id = ?;` , id
   );
 }

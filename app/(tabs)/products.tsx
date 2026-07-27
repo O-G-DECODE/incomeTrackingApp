@@ -1,4 +1,4 @@
-import { deleteProduct, getAllProducts } from "@/database/productOperation";
+import { deleteProduct } from "@/database/productOperation";
 import { useState, useCallback } from "react";
 import {
     View,
@@ -10,6 +10,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import type { Product } from "@/types/product";
 import EditProductModel from "@/components/ui/editProductModel";
 import { showConfirm, showError } from "@/utils/alert";
+import { loadProducts } from "@/database/productService";
+
 
 export default function Products() {
 
@@ -17,20 +19,10 @@ export default function Products() {
     const [modalVisible, setModalVisible] = useState(false)
     const [selectProduct, setSelectProduct] = useState<Product | null>(null);
 
-
-    const loadProduct = async () => {
-        try {
-            const productList = await getAllProducts();
-            setProducts(productList);
-        } catch (error) {
-            showError(error)
-        }
-    };
-
     const handleDelete = async (id: number) => {
         try {
             await deleteProduct(id);
-            await loadProduct();
+            await loadProducts(setProducts);
         } catch (error) {
             showError(error)
         }
@@ -38,7 +30,7 @@ export default function Products() {
 
     useFocusEffect(
         useCallback(() => {
-            loadProduct();
+            loadProducts(setProducts);
 
             return () => {
                 // Optional cleanup
@@ -93,7 +85,7 @@ export default function Products() {
             visible={modalVisible}
             product={selectProduct}
             onClose={()=> setModalVisible(false)}
-            onUpdated={loadProduct}
+            onUpdated={()=> loadProducts(setProducts)}
             />
 
         </View>
