@@ -1,5 +1,8 @@
 
 import { addProduct } from '@/database/productOperation';
+import { showError } from '@/utils/alert';
+import { isEmpty } from '@/utils/isEmpty';
+import { isValidNumber } from '@/utils/isNumber';
 import { useState} from 'react';
 import { Platform, ScrollView, TextInput, Button, Alert, Text } from 'react-native';
 
@@ -15,21 +18,21 @@ export default function TabTwoScreen() {
 
   const handleSubmit = async () => {
  
-    if(( productName.trim() == "" || fullprice.trim() == "")) {
+    if( isEmpty(productName) || isEmpty(fullprice)) {
       alert("Please fill the all fields")
       return;
     } 
-    if (( isNaN(Number(fullprice))) ){
+    if (!isValidNumber(fullprice) ){
         alert("Price must be a number")
         return;
     }
 
-    if(halfPrice.trim() !== "" && isNaN(Number(halfPrice))){
+    if(!isEmpty(halfPrice) && !isValidNumber(halfPrice)){
       alert("Half price must be a number")
       return
     }
 
-    if(quarterPrice.trim() !== "" && isNaN(Number(quarterPrice))){
+    if(!isEmpty(quarterPrice) && !isValidNumber(quarterPrice)){
       alert("Quarter price must be a number")
       return
     }
@@ -44,7 +47,7 @@ export default function TabTwoScreen() {
     alert("Product inserted")
     handleClear()
     }catch(error){
-      alert("failed to add product")
+      showError(error)
       console.log(error)
     }
   }

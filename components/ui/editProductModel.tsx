@@ -11,6 +11,8 @@ import {
 import type { Product } from "@/types/product";
 import { updateProduct } from "@/database/productOperation";
 import { showError } from "@/utils/alert";
+import { isEmpty } from "@/utils/isEmpty";
+import { isValidNumber } from "@/utils/isNumber";
 
 interface EditProductModalProps {
   visible: boolean;
@@ -43,8 +45,22 @@ export default function EditProductModal({
   const handleUpdate = async () => {
     if (!product) return;
 
-    if (productName.trim() === "" || fullPrice.trim() === "") {
+    if(isEmpty(fullPrice)){
+      alert("Fill the fields")
+    }
+
+    if (isEmpty(productName) || isEmpty(fullPrice)) {
       Alert.alert("Validation", "Please fill all required fields.");
+      return;
+    }
+
+    if(!isEmpty(halfPrice) && !isValidNumber(halfPrice)){
+      alert("Must be a Number")
+      return;
+    }
+
+    if(!isEmpty(quarterPrice) && !isValidNumber(quarterPrice)){
+      showError("Must be a number")
       return;
     }
 
