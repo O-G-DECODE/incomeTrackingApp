@@ -1,16 +1,26 @@
-
 import { getDatabase } from "./db";
 import type { Product } from "@/types/product";
+
+
+// Add Product
 export async function addProduct(
   productName: string,
   fullPrice: number,
   halfPrice: number | null,
   quarterPrice: number | null
 ) {
-  const db = await getDatabase();
+  try {
+    const db = await getDatabase();
 
-  await db.runAsync(
-    `
+    console.log("ADD PRODUCT:", {
+      productName,
+      fullPrice,
+      halfPrice,
+      quarterPrice,
+    });
+
+    await db.runAsync(
+      `
       INSERT INTO Products (
         productName,
         fullPrice,
@@ -19,67 +29,108 @@ export async function addProduct(
         createdAt
       )
       VALUES (?, ?, ?, ?, ?);
-    `,
-    productName,
-    fullPrice,
-    halfPrice,
-    quarterPrice,
-    new Date().toISOString()
-  );
+      `,
+      productName,
+      fullPrice,
+      halfPrice,
+      quarterPrice,
+      new Date().toISOString()
+    );
+
+    console.log("✅ Product added successfully");
+
+  } catch (error) {
+    console.error("❌ addProduct failed:", error);
+    throw error;
+  }
 }
+
+
+// Get All Products
 export async function getAllProducts(): Promise<Product[]> {
-  const db = await getDatabase();
+  try {
+    const db = await getDatabase();
 
-  console.log("Database opened");
+    console.log("Fetching products...");
 
-  const tables = await db.getAllAsync(
-    "SELECT name FROM sqlite_master WHERE type='table';"
-  );
+    const products = await db.getAllAsync<Product>(
+      "SELECT * FROM Products ORDER BY id DESC;"
+    );
 
-  console.log("Tables:", tables);
+    console.log(`✅ Products loaded: ${products.length}`);
 
-  const products = await db.getAllAsync<Product>(
-    "SELECT * FROM Products"
-  );
+    return products;
 
-  console.log("Products:", products);
-
-  return products;
+  } catch (error) {
+    console.error("❌ getAllProducts failed:", error);
+    throw error;
+  }
 }
 
+
+// Delete Product
 export async function deleteProduct(id: number) {
-  const db = await getDatabase();
+  try {
+    const db = await getDatabase();
 
-  await db.runAsync(
-    `DELETE FROM Products WHERE id = ?;` , id
-  );
+    console.log("Deleting product ID:", id);
+
+    const result = await db.runAsync(
+      "DELETE FROM Products WHERE id = ?;",
+      id
+    );
+
+    console.log(
+      "✅ Delete completed. Rows affected:",
+      result.changes
+    );
+
+  } catch (error) {
+    console.error("❌ deleteProduct failed:", error);
+    throw error;
+  }
 }
 
+
+// Update Product
 export async function updateProduct(
-  id:number,
+  id: number,
   productName: string,
-  fullPrice:number,
+  fullPrice: number,
   halfPrice: number | null,
-  quarterPrice : number | null
+  quarterPrice: number | null
 ) {
-  const db = await getDatabase();
-  await db.runAsync(
-    `
-    UPDATE Products 
-    SET
-     productName = ?,
-     fullPrice = ?,
-     halfPrice = ?,
-     quarterPrice = ?,
-     createdAt = ?
-     WHERE id = ?;
-     `,
-     productName,
-     fullPrice,
-     halfPrice,
-     quarterPrice,
-     new Date().toISOString(),
-     id
-  );
-  
+  try {
+    const db = await getDatabase();
+
+    console.log("Updating product:", id);
+
+    const result = await db.runAsync(
+      `
+      UPDATE Products
+      SET
+        productName = ?,
+        fullPrice = ?,
+        halfPrice = ?,
+        quarterPrice = ?,
+        createdAt = ?
+      WHERE id = ?;
+      `,
+      productName,
+      fullPrice,
+      halfPrice,
+      quarterPrice,
+      new Date().toISOString(),
+      id
+    );
+
+    console.log(
+      "✅ Update completed. Rows affected:",
+      result.changes
+    );
+
+  } catch (error) {
+    console.error("❌ updateProduct failed:", error);
+    throw error;
+  }
 }

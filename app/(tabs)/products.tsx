@@ -29,14 +29,16 @@ export default function Products() {
     }
 
     useFocusEffect(
-        useCallback(() => {
-            loadProducts(setProducts);
+  useCallback(() => {
+    console.log("Products screen focused");
 
-            return () => {
-                // Optional cleanup
-            };
-        }, [])
-    );
+    loadProducts(setProducts)
+      .then(() => console.log("Products loaded"))
+      .catch((err) => console.log("Load error:", err));
+
+    return () => {};
+  }, [])
+);
 
     return (
         <View>
