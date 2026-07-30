@@ -1,3 +1,4 @@
+import Products from "@/app/(tabs)/products";
 import { getDatabase } from "./db";
 import type { Product } from "@/types/product";
 
@@ -133,4 +134,52 @@ export async function updateProduct(
     console.error("❌ updateProduct failed:", error);
     throw error;
   }
+}
+
+// open shop
+
+export async function openShop(
+  businessDate: string,
+  productIds: number[]
+) {
+  const db = await getDatabase();
+
+  console.log("Deleting old records...");
+
+  await db.runAsync(
+    "DELETE FROM OpenShopProducts WHERE businessDate = ?;",
+    businessDate
+  );
+
+  console.log("Delete completed");
+
+  for (const productId of productIds) {
+    console.log("Inserting:", productId);
+
+    await db.runAsync(
+      `INSERT INTO OpenShopProducts
+      (businessDate, productId, createdAt)
+      VALUES (?, ?, ?);`,
+      businessDate,
+      productId,
+      new Date().toISOString()
+    );
+  }
+
+  console.log("Open shop completed");
+}
+
+
+// fetch data from the openShop
+
+export async function getOpenShopProducts(){
+  const db = await getDatabase()
+
+  console.log("going to fetch data from openShop Products")
+
+  const rows = await db.getAllAsync(`
+    SELECT * FROM OpenShopProducts
+    `)
+  console.log(rows)
+  return rows
 }

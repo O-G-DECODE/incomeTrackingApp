@@ -5,6 +5,7 @@ import { Button, TouchableOpacity, View,Text, Pressable, FlatList } from "react-
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
+import { getAllProducts, getOpenShopProducts, openShop } from "@/database/productOperation";
 
 export default function OpenShop({
     onClose,
@@ -45,6 +46,19 @@ export default function OpenShop({
             }
             return[... previous, id];
         });
+    };
+
+    const handleOpenShop = async () => {
+      try{
+        await openShop(
+          businessDate.toISOString().split("T")[0],
+          selectedProduct
+        );
+        alert("Shop Opened")
+        onClose();
+      }catch(error){
+        console.log(error)
+      }
     };
 
     return(
@@ -88,7 +102,7 @@ export default function OpenShop({
 
 <Button
  title="Start Shop"
- onPress={onClose}
+ onPress={handleOpenShop}
  />
 <Button
   title="Close"

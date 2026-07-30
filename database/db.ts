@@ -26,6 +26,14 @@ export async function getDatabase() {
         quarterPrice REAL,
         createdAt TEXT NOT NULL
       );
+
+      CREATE TABLE IF NOT EXISTS OpenShopProducts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    businessDate TEXT NOT NULL,
+    productId INTEGER NOT NULL,
+    createdAt TEXT NOT NULL,
+    FOREIGN KEY (productId) REFERENCES Products(id)
+);
     `);
 
 
