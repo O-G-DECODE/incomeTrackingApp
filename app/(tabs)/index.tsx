@@ -6,13 +6,15 @@ import { Text, View } from 'react-native';
 
 
 export default function HomeScreen(){
-
-    //  const [products, setProducts] = useState<Product[]>([])
-    //  const [selectedProductId ,setSelectedProductId] = useState<number | null> (null)
-
-    //  useEffect(()=> {
-    //   loadProducts(setProducts)
-    //  },[])
+  
+  const [shopProduct, setShopProduct] = useState<any[]>([])
+  useEffect(() => {
+    async function loadShopProduct() {
+      const date = businessDate.toISOString().split("T")[0];
+      const rows = await getOpenShopProducts(date);
+    }
+    
+  })
   return(
     <View>    
       

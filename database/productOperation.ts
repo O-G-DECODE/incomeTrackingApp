@@ -1,4 +1,3 @@
-import Products from "@/app/(tabs)/products";
 import { getDatabase } from "./db";
 import type { Product } from "@/types/product";
 
@@ -169,17 +168,33 @@ export async function openShop(
   console.log("Open shop completed");
 }
 
+// fetch openshop product
 
-// fetch data from the openShop
+export async function getOpenShopProducts(businessDate: string) {
+  const db = await getDatabase();
 
-export async function getOpenShopProducts(){
-  const db = await getDatabase()
+  console.log("Fetching Open Shop Products...");
 
-  console.log("going to fetch data from openShop Products")
+  const rows = await db.getAllAsync(
+    `
+    SELECT
+      OpenShopProducts.id,
+      OpenShopProducts.businessDate,
+      Products.id AS productId,
+      Products.productName,
+      Products.fullPrice,
+      Products.halfPrice,
+      Products.quarterPrice
+    FROM OpenShopProducts
+    INNER JOIN Products
+      ON OpenShopProducts.productId = Products.id
+    WHERE OpenShopProducts.businessDate = ?
+    ORDER BY Products.productName;
+    `,
+    businessDate
+  );
 
-  const rows = await db.getAllAsync(`
-    SELECT * FROM OpenShopProducts
-    `)
-  console.log(rows)
-  return rows
+  console.log(rows);
+
+  return rows;
 }

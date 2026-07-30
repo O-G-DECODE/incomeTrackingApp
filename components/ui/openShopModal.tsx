@@ -5,7 +5,7 @@ import { Button, TouchableOpacity, View,Text, Pressable, FlatList } from "react-
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import { getAllProducts, getOpenShopProducts, openShop } from "@/database/productOperation";
+import { openShop } from "@/database/productOperation";
 
 export default function OpenShop({
     onClose,
