@@ -1,13 +1,21 @@
 
 import { getOpenShopProducts } from '@/database/productOperation';
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Text, View , FlatList} from 'react-native';
+import { useFocusEffect } from "@react-navigation/native";
+import { loadProducts } from '@/database/productService';
 
 
 export default function HomeScreen(){
   
   const [shopProduct, setShopProduct] = useState<any[]>([])
-  useEffect(() => {
+  
+  useFocusEffect(
+  useCallback(() => {
+    loadShopProduct();
+  }, [])
+);
+
     async function loadShopProduct() {
       try{
         const businessDate = new Date().toISOString().split("T")[0]
@@ -19,9 +27,6 @@ export default function HomeScreen(){
       }
       
     }
-    loadShopProduct();
-  },[])
-
   
   return(
 

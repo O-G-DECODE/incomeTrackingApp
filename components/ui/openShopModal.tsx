@@ -5,9 +5,10 @@ import { Button, TouchableOpacity, View, Text, Pressable, FlatList } from "react
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import { openShop } from "@/database/productOperation";
+import { getOpenShopProducts, openShop } from "@/database/productOperation";
 
 export default function OpenShop({
+  
   onClose,
 }: {
   onClose: () => void
@@ -18,16 +19,29 @@ export default function OpenShop({
   const [businessDate, setBusinessDate] = useState(new Date());
   const [products, setProducts] = useState<Product[]>([])
   const [selectedProduct, setSelectedProduct] = useState<number[]>([])
-
+ 
   useEffect(() => {
-    loadProducts(setProducts)
+
+    loadData();
   }, []);
+
+  const loadData = async ()=> {
+    await loadProducts(setProducts);
+
+    const rows = await getOpenShopProducts(
+      businessDate.toISOString().split("T")[0]
+    )
+
+    setSelectedProduct(
+      rows.map((row: any) => row.productId)
+    );
+  }
 
   const openDatePicker = () => {
     setShowDatePicker(true)
   }
 
-  const selectDatePicker = (
+  const selectDatePicker = async (
     event: DateTimePickerEvent,
     selectedDate?: Date
   ) => {
@@ -35,6 +49,14 @@ export default function OpenShop({
 
     if (selectedDate) {
       setBusinessDate(selectedDate);
+
+      const rows = await getOpenShopProducts(
+        selectedDate.toISOString().split("T")[0]
+    );
+
+    setSelectedProduct(
+        rows.map((row: any) => row.productId)
+    );
     }
   };
 
