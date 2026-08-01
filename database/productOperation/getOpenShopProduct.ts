@@ -1,12 +1,13 @@
+import { ShopProduct } from "@/types/shopProducts";
 import { getDatabase } from "../db";
 import type { Product } from "@/types/product";
 
-export async function getOpenShopProducts(businessDate: string) {
+export async function getOpenShopProducts(businessDate: string):Promise<ShopProduct[]> {
   const db = await getDatabase();
 
   console.log("Fetching Open Shop Products...");
 
-  const rows = await db.getAllAsync(
+  const rows = await db.getAllAsync<ShopProduct>(
     `
     SELECT
       OpenShopProducts.id,
@@ -27,5 +28,5 @@ export async function getOpenShopProducts(businessDate: string) {
 
   console.log(rows);
 
-  return rows;
+  return rows as ShopProduct[];
 }

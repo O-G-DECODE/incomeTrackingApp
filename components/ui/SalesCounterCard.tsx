@@ -1,8 +1,8 @@
 import { View, Text, Pressable } from "react-native";
-import { Product } from "@/types/product";
+import { ShopProduct } from "@/types/shopProducts";
 
 interface SaleCounterCardProps {
-  product: Product;
+  product: ShopProduct;
 
   fullCount: number;
   halfCount: number;
