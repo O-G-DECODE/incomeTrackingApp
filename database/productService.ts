@@ -1,6 +1,6 @@
-import { getAllProducts } from "./productOperation";
 import type { Product } from "@/types/product";
 import { showError } from "@/utils/alert";
+import { getAllProducts } from "./productOperation/getAllProduct";
 
 export async function loadProducts(
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>

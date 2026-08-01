@@ -9,10 +9,11 @@ import {
 } from "react-native";
 
 import type { Product } from "@/types/product";
-import { updateProduct } from "@/database/productOperation";
+
 import { showError } from "@/utils/alert";
 import { isEmpty } from "@/utils/isEmpty";
 import { isValidNumber } from "@/utils/isNumber";
+import { updateProduct } from "@/database/productOperation/updateProduct";
 
 interface EditProductModalProps {
   visible: boolean;

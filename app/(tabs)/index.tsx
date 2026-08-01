@@ -1,9 +1,8 @@
-
-import { getOpenShopProducts } from '@/database/productOperation';
 import { useCallback, useState } from 'react';
 import { Text, View , FlatList} from 'react-native';
 import { useFocusEffect } from "@react-navigation/native";
 import SaleCounterCard from "@/components/ui/SalesCounterCard";
+import { getOpenShopProducts } from '@/database/productOperation/getOpenShopProduct';
 
 export default function HomeScreen(){
   const [counts, setCounts] = useState<Record<string, number>>({});

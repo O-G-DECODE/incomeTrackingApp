@@ -1,5 +1,6 @@
 
-import { addProduct } from '@/database/productOperation';
+
+import { addProduct } from '@/database/productOperation/addProduct';
 import { showError } from '@/utils/alert';
 import { isEmpty } from '@/utils/isEmpty';
 import { isValidNumber } from '@/utils/isNumber';
