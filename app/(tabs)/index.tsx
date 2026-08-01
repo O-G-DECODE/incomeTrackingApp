@@ -3,11 +3,10 @@ import { getOpenShopProducts } from '@/database/productOperation';
 import { useCallback, useState } from 'react';
 import { Text, View , FlatList} from 'react-native';
 import { useFocusEffect } from "@react-navigation/native";
-import { loadProducts } from '@/database/productService';
-
+import SaleCounterCard from "@/components/ui/SalesCounterCard";
 
 export default function HomeScreen(){
-  
+  const [counts, setCounts] = useState<Record<string, number>>({});
   const [shopProduct, setShopProduct] = useState<any[]>([])
   
   useFocusEffect(
@@ -15,7 +14,23 @@ export default function HomeScreen(){
     loadShopProduct();
   }, [])
 );
+const increaseCount = (productId: number, size: string) => {
+  const key = `${productId}-${size}`;
 
+  setCounts(prev => ({
+    ...prev,
+    [key]: (prev[key] ?? 0) + 1,
+  }));
+};
+
+const decreaseCount = (productId: number, size: string) => {
+  const key = `${productId}-${size}`;
+
+  setCounts(prev => ({
+    ...prev,
+    [key]: Math.max((prev[key] ?? 0) - 1, 0),
+  }));
+};
     async function loadShopProduct() {
       try{
         const businessDate = new Date().toISOString().split("T")[0]
@@ -36,23 +51,42 @@ export default function HomeScreen(){
       <Text> Todays Product</Text>
 
       <FlatList
-        data={shopProduct}
-        keyExtractor={ (item) => 
-        item.productId.toString()}
-        renderItem={({item}) => (
+  data={shopProduct}
+  keyExtractor={(item) => item.productId.toString()}
+  renderItem={({ item }) => (
+    <SaleCounterCard
+      product={item}
 
-          <View style = {{padding:20}} >
-            <Text> {item.productName} Rupees {item.fullPrice} </Text>
-            {item.halfPrice !== null &&(
-              <Text>{item.productName} Rupees [H] {item.halfPrice}</Text>
-            )}
-            {item.quarterPrice !== null && (
-              <Text>{item.productName} Repees [Q] {item.quarterPrice}</Text>
-            )}
-          </View>
+      fullCount={counts[`${item.productId}-FULL`] ?? 0}
+      halfCount={counts[`${item.productId}-HALF`] ?? 0}
+      quarterCount={counts[`${item.productId}-QUARTER`] ?? 0}
 
-        )}
-      />
+      onIncreaseFull={() =>
+        increaseCount(item.productId, "FULL")
+      }
+
+      onDecreaseFull={() =>
+        decreaseCount(item.productId, "FULL")
+      }
+
+      onIncreaseHalf={() =>
+        increaseCount(item.productId, "HALF")
+      }
+
+      onDecreaseHalf={() =>
+        decreaseCount(item.productId, "HALF")
+      }
+
+      onIncreaseQuarter={() =>
+        increaseCount(item.productId, "QUARTER")
+      }
+
+      onDecreaseQuarter={() =>
+        decreaseCount(item.productId, "QUARTER")
+      }
+    />
+  )}
+/>
       
     </View>
   )}
