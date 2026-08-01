@@ -34,6 +34,16 @@ export async function getDatabase() {
     createdAt TEXT NOT NULL,
     FOREIGN KEY (productId) REFERENCES Products(id)
 );
+
+     CREATE TABLE IF NOT EXISTS Sales(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    businessDate TEXT NOT NULL,
+    productId INTEGER NOT NULL,
+    size TEXT NOT NULL,
+    count INTEGER NOT NULL DEFAULT 0,
+    createdAt TEXT NOT NULL,
+    FOREIGN KEY(productId) REFERENCES Products(id)
+);
     `);
 
 
@@ -42,7 +52,7 @@ export async function getDatabase() {
     return database;
 
 
-  } catch(error) {
+  } catch (error) {
 
     console.error(
       "❌ Database initialization error:",

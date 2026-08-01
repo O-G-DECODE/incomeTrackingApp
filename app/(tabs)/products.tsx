@@ -1,4 +1,4 @@
-import { deleteProduct } from "@/database/productOperation";
+
 import { useState, useCallback } from "react";
 import {
     View,
@@ -11,6 +11,7 @@ import type { Product } from "@/types/product";
 import EditProductModel from "@/components/ui/editProductModel";
 import { showConfirm, showError } from "@/utils/alert";
 import { loadProducts } from "@/database/productService";
+import { deleteProduct } from "@/database/productOperation/deleteProduct";
 
 
 export default function Products() {
@@ -31,7 +32,6 @@ export default function Products() {
     useFocusEffect(
   useCallback(() => {
     console.log("Products screen focused");
-
     loadProducts(setProducts)
       .then(() => console.log("Products loaded"))
       .catch((err) => console.log("Load error:", err));
