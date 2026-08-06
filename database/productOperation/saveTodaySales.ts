@@ -4,7 +4,6 @@ export async function saveTodaySales(
   businessDate: string,
   counts: Record<string, number>
 ) {
-
   const db = await getDatabase();
 
   // Delete today's sales
@@ -42,7 +41,5 @@ export async function saveTodaySales(
       count,
       new Date().toISOString()
     );
-
   }
-
 }
