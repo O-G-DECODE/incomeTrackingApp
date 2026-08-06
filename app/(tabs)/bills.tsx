@@ -1,42 +1,42 @@
 import { loadProducts } from "@/database/productService";
 import { Product } from "@/types/product";
-import { Text ,FlatList, View, TouchableOpacity } from "react-native";
+import { Text, FlatList, View, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 import { DailySales } from "@/components/reports/dailySales";
 import { MonthlySales } from "@/components/reports/monthlySales";
 
-export default function Bills(){
+export default function Bills() {
 
     const [products, setProducts] = useState<Product[]>([])
     const [selectedScreen, setSelectedScreen] = useState<'dailyCollection' | 'monthlyCollection'>('dailyCollection')
-    
-    useEffect(()=>{
+
+    useEffect(() => {
         loadProducts(setProducts);
-    }, []) ;
+    }, []);
 
-    return(
-        <View style={{padding:40}}>
+    return (
+        <View style={{ padding: 40 }}>
 
             <TouchableOpacity
-            onPress={()=>{
-                setSelectedScreen('dailyCollection')
-            }}>
+                onPress={() => {
+                    setSelectedScreen('dailyCollection')
+                }}>
                 <Text> Daily Sales</Text>
-                </TouchableOpacity>
+            </TouchableOpacity>
 
             <TouchableOpacity
-            onPress={()=> {
-                setSelectedScreen('monthlyCollection')
-            }}>
+                onPress={() => {
+                    setSelectedScreen('monthlyCollection')
+                }}>
                 <Text> Monthly Sales</Text>
-                </TouchableOpacity>
-                {
-        selectedScreen === 'dailyCollection' ? (
-            <DailySales /> 
-        ) : ( <MonthlySales />
-        )
-    }
-            
+            </TouchableOpacity>
+            {
+                selectedScreen === 'dailyCollection' ? (
+                    <DailySales />
+                ) : (<MonthlySales />
+                )
+            }
+
         </View>
     )
 }
