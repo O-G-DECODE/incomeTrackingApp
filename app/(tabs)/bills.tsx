@@ -15,7 +15,7 @@ export default function Bills() {
     }, []);
 
     return (
-        <View style={{ padding: 40 }}>
+        <View style={{flex:1, padding: 20 }}>
 
             <TouchableOpacity
                 onPress={() => {
